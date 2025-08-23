@@ -1,0 +1,24 @@
+AI Multi-Agent Platform Test Document
+
+This is a test document for the AI Multi-Agent Platform. It contains sample information about artificial intelligence and multi-agent systems.
+
+What is a Multi-Agent System?
+A multi-agent system (MAS) is a computerized system composed of multiple interacting intelligent agents. These agents can work together to solve problems that are beyond the individual capabilities or knowledge of each agent.
+
+Key Features:
+1. Distributed Problem Solving: Agents can work on different parts of a complex problem simultaneously.
+2. Coordination: Agents communicate and coordinate their actions to achieve common goals.
+3. Autonomy: Each agent can make independent decisions based on its knowledge and objectives.
+4. Scalability: New agents can be added to the system to handle increased workload.
+
+Applications:
+- Robotics and automation
+- Supply chain management
+- Traffic control systems
+- Financial trading systems
+- Smart grid management
+
+Benefits of RAG (Retrieval-Augmented Generation):
+RAG combines the power of large language models with external knowledge retrieval. This approach allows AI systems to access up-to-date information and provide more accurate, contextual responses.
+
+The AI Multi-Agent Platform demonstrates how different AI agents can work together using RAG technology to provide comprehensive answers to user queries.

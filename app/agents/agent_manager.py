@@ -1,39 +1,46 @@
-from crewai import Agent, Task, Crew
+from typing import Optional, Dict
+# from crewai import Agent, Task, Crew
+from langchain.tools import tool
+from langchain_openai import ChatOpenAI
 from app.services.rag_pipeline import query_rag
+from app.config import OPENAI_API_KEY
+import logging
 
-def create_agents():
-    retriever_agent = Agent(
-        role='Data Retriever',
-        goal='Retrieve the most relevant context for user queries',
-        backstory='Specialist in extracting precise data from document embeddings',
-        allow_delegation=False,
-        verbose=True
-    )
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-    analyst_agent = Agent(
-        role='Analyst',
-        goal='Analyze retrieved data and produce clear, concise answers',
-        backstory='Expert in summarizing and interpreting data',
-        allow_delegation=False,
-        verbose=True
-    )
+# Custom tool for RAG retrieval
+@tool
+def retrieve_information(question: str) -> str:
+    """Retrieve relevant information from the knowledge base"""
+    try:
+        return query_rag(question)
+    except Exception as e:
+        logger.error(f"Error in retrieval tool: {str(e)}", exc_info=True)
+        return f"Error retrieving information: {str(e)}"
 
-    return retriever_agent, analyst_agent
+def create_agents() -> Dict[str, str]:
+    """Create and configure the agent team (simplified for compatibility)"""
+    return {
+        "retriever": "Research Analyst - retrieves information from knowledge base",
+        "analyst": "Data Analyst - analyzes retrieved information", 
+        "quality": "Quality Assurance - ensures accuracy and completeness"
+    }
 
-def run_multiagent_query(question):
-    retriever, analyst = create_agents()
-
-    retrieval_task = Task(
-        description=f"Retrieve context for: {question}",
-        agent=retriever,
-        func=lambda: query_rag(question)
-    )
-
-    analysis_task = Task(
-        description=f"Analyze and answer: {question}",
-        agent=analyst
-    )
-
-    crew = Crew(agents=[retriever, analyst], tasks=[retrieval_task, analysis_task])
-    results = crew.kickoff()
-    return results
+def run_multiagent_query(question: str) -> str:
+    """
+    Run a multi-agent query (temporarily using simplified approach)
+    """
+    try:
+        # Temporarily use direct RAG query since CrewAI is disabled
+        logger.info("Multi-agent system temporarily using simplified RAG approach")
+        result = query_rag(question)
+        
+        if result:
+            return f"[Multi-Agent Mode - Simplified] {result}"
+        else:
+            return "Multi-agent system is temporarily unavailable. CrewAI dependencies have been disabled due to conflicts."
+        
+    except Exception as e:
+        logger.error(f"Error in multi-agent query: {str(e)}", exc_info=True)
+        return f"Multi-agent system encountered an error: {str(e)}"
