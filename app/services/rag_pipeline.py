@@ -286,7 +286,7 @@ def query_rag(question: str, k: int = 4) -> Optional[str]:
         if hasattr(response, 'content'):
             return response.content
         else:
-            return str(response)
+            return response
         
     except Exception as e:
         logger.error(f"Error in RAG query: {str(e)}", exc_info=True)

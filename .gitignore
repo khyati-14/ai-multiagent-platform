@@ -2,7 +2,6 @@ venv/
 __pycache__/
 .env
 *.db
-
-
-.env
-.env
+*.txt
+app/data/uploads/
+app/data/vectorstore/

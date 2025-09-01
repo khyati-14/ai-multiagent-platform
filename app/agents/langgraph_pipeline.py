@@ -43,7 +43,11 @@ def analyze_and_answer(state: AgentState) -> AgentState:
         ]
         
         response = llm.invoke(prompt)
-        state["answer"] = response.content
+        # Handle different response types - Ollama returns string directly
+        if hasattr(response, 'content'):
+            state["answer"] = response.content
+        else:
+            state["answer"] = response
         state["messages"].append(AIMessage(content=f"Draft answer: {state['answer'][:200]}..."))
     except Exception as e:
         logger.error(f"Error in analysis: {str(e)}", exc_info=True)
@@ -62,10 +66,12 @@ def quality_check(state: AgentState) -> AgentState:
         ]
         
         response = llm.invoke(prompt)
-        state["messages"].append(AIMessage(content=f"QA feedback: {response.content[:200]}..."))
+        # Handle different response types - Ollama returns string directly
+        response_text = response.content if hasattr(response, 'content') else response
+        state["messages"].append(AIMessage(content=f"QA feedback: {response_text[:200]}..."))
         
         # If QA suggests improvements, we loop back
-        if "improve" in response.content.lower() or "incomplete" in response.content.lower():
+        if "improve" in response_text.lower() or "incomplete" in response_text.lower():
             if state["iterations"] < 3:  # Max 3 iterations
                 state["iterations"] += 1
                 state["answer"] = ""  # Clear to trigger reprocessing
